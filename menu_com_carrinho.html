@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    .section-title {
+      margin-top: 40px;
+      margin-bottom: 20px;
+      font-size: 2em;
+      color: #2c3e50;
+      border-bottom: 2px solid #2c3e50;
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+
+    .slider {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 15px;
+    }
+
+    .menu-item {
+      background-color: #34495e;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      position: relative;
+      width: 280px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+      margin: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      padding-bottom: 10px;
+    }
+
+    .menu-item img {
+      width: 100%;
+      height: 60%;
+      object-fit: contain;
+    }
+
+    .menu-item h3 {
+      color: #ecf0f1;
+      font-size: 1.2em;
+      padding: 4px;
+      background-color: #2c3e50;
+      width: 100%;
+      margin: 0;
+    }
+
+    .menu-item .price {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #000;
+      background-color: #ecf0f1;
+      border-radius: 6px;
+      padding: 4px 8px;
+      width: 120px;
+      margin: 8px 0;
+      text-align: center;
+    }
+
+    .menu-item .buy-button {
+      background-color: #27ae60;
+      color: white;
+      font-size: 1em;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background-color 0.3s;
+    }
+
+    .menu-item .buy-button:hover {
+      background-color: #219150;
+    }
+
+    @media screen and (max-width: 768px) {
+      .slider {
+        justify-content: center;
+      }
+
+      .menu-item {
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+      }
+
+      #carrinho {
+        position: static;
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+      }
+    }
+
+    /* Carrinho atualizado */
+    #carrinho {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 220px;
+      max-height: 360px;
+      background-color: #ecf0f1;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      padding: 15px;
+      overflow-y: auto;
+      text-align: left;
+      z-index: 1000;
+      border-radius: 10px;
+      font-size: 0.9em;
+    }
+
+    #carrinho h2 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+
+    #lista-carrinho {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    #lista-carrinho li {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+
+    #total {
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 1em;
+    }
+
+    #finalizar {
+      margin-top: 10px;
+      width: 100%;
+      background-color: #27ae60;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    #finalizar:hover {
+      background-color: #219150;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Menu</h1>
+
+  <!-- Carrinho -->
+  <div id="carrinho">
+    <h2>Carrinho</h2>
+    <ul id="lista-carrinho"></ul>
+    <p id="total">Total: R$ 0,00</p>
+    <button id="finalizar">Finalizar Pedido</button>
+  </div>
+
+  <!-- Aqui entrariam os itens do menu como no seu código anterior... -->
+
+  <!-- Script -->
+  <script>
+    const botoesComprar = document.querySelectorAll('.buy-button');
+    const listaCarrinho = document.getElementById('lista-carrinho');
+    const totalEl = document.getElementById('total');
+    let total = 0;
+
+    botoesComprar.forEach(botao => {
+      botao.addEventListener('click', () => {
+        const item = botao.parentElement;
+        const nome = item.querySelector('h3').textContent;
+        const precoTexto = item.querySelector('.price').textContent;
+        const preco = parseFloat(precoTexto.replace('R$', '').replace(',', '.'));
+
+        const li = document.createElement('li');
+        li.textContent = `${nome} - R$ ${preco.toFixed(2).replace('.', ',')}`;
+        listaCarrinho.appendChild(li);
+
+        total += preco;
+        totalEl.textContent = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+      });
+    });
+
+    const botaoFinalizar = document.getElementById('finalizar');
+    botaoFinalizar.addEventListener('click', () => {
+      if (listaCarrinho.children.length === 0) {
+        alert('Seu carrinho está vazio!');
+      } else {
+        alert('Pedido finalizado com sucesso!');
+        listaCarrinho.innerHTML = '';
+        total = 0;
+        totalEl.textContent = 'Total: R$ 0,00';
+      }
+    });
+  </script>
+
+</body>
+</html>
